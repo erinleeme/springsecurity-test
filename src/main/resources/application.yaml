@@ -1,0 +1,22 @@
+server:
+  port: 8082
+  servlet:
+    context-path: /
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+
+
+spring:
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: jdbc:mariadb://3.34.144.237:3307/Daily
+    username: admin
+    password: root
+
+
+mybatis:
+  mapper-locations: mybatis/mapper/*.xml
+  configuration:
+      map-underscore-to-camel-case: true
