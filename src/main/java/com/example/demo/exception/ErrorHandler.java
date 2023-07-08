@@ -25,17 +25,5 @@ public class ErrorHandler {
         ErrorResponse response = new ErrorResponse(e.getErrorCode().getCode(), e.getErrorCode().getMessage());
         return response;
     }
-
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(DuplicateCheckException.class)
-    public ErrorResponse DuplicateCheckException(DuplicateCheckException e) {
-        return new ErrorResponse(e.getErrorCode().getCode(), e.getErrorCode().getMessage());
-    }
-
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ErrorResponse HttpMessageNotReadableException(HttpMessageNotReadableException e) {
-        return new ErrorResponse(400, e.getMessage());
-    }
 }
 

@@ -14,6 +14,12 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class WebSecurityConfig {
 
+    /*암호화에 사용될 Bcrypt 빈 생성*/
+    @Bean
+    public BCryptPasswordEncoder bCryptPasswordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
     /*스프링 시큐리티 체인 빈 생성 - 요청 URL 설정*/
     /*인증 단계 필터 설정*/
     @Bean
@@ -27,6 +33,4 @@ public class WebSecurityConfig {
                 .logout((logout) -> logout.permitAll());
         return httpSecurity.build();
     }
-
-
 }
