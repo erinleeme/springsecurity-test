@@ -6,6 +6,8 @@
 ## 1. build.gradle 설정
 
 스프링 시큐리티 의존성 추가
+스프링 시큐리티 3.1.0 버전 사용
+
 
 ```java
 /*Spring Security 적용*/
