@@ -5,15 +5,16 @@
 
 ## 1. build.gradle 설정
 
-스프링 시큐리티 의존성 추가
-스프링 시큐리티 3.1.0 버전 사용
-
+스프링 시큐리티 의존성 추가 
+<br>
+스프링 시큐리티 6.1.1 버전 사용
+[Spring Security 6.1.1 GA, Current](https://spring.io/projects/spring-security#learn)
 
 ```java
 /*Spring Security 적용*/
 implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6:3.1.1.RELEASE'
 implementation 'org.springframework.security:spring-security-test'
-implementation group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: '3.1.0'
+implementation "org.springframework.boot:spring-boot-starter-security"
 ```
 
 ## 2. 스프링 시큐리티 필터 적용
