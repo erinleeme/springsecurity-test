@@ -11,8 +11,6 @@
 [Spring Security 6.1.1 GA, Current](https://spring.io/projects/spring-security#learn)
 
 ```java
-/*Spring Security 적용*/
-implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6:3.1.1.RELEASE'
 implementation 'org.springframework.security:spring-security-test'
 implementation "org.springframework.boot:spring-boot-starter-security"
 ```
