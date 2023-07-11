@@ -1,7 +1,6 @@
 package com.example.demo.controller;
 
 import com.example.demo.service.MemberService;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
