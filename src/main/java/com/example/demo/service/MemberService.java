@@ -27,6 +27,8 @@ public class MemberService {
 
         /*회원 정보 유무 확인*/
         if(memberDAO == null) {
+            /*이때 에러 던져도 되는지 확인*/
+            log.info("유효하지 않은 이메일 주소");
             return "fail";
         }
 
