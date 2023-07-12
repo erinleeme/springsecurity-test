@@ -22,4 +22,4 @@ implementation "org.springframework.boot:spring-boot-starter-security"
 
 ## 3. 로그인 구현 방식
 ### Session - sesseion branch 확인
-### JWT - [개념정리중](https://github.com/f-lab-edu/Daily/issues/44)https://github.com/f-lab-edu/Daily/issues/44
+### JWT - [개념정리중](https://github.com/f-lab-edu/Daily/issues/44)
