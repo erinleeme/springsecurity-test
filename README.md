@@ -21,5 +21,5 @@ implementation "org.springframework.boot:spring-boot-starter-security"
 - 그 외에 메인페이지 접속 등과 같이 권한 확인이 필요없는 요청인 경우에는 인증 적용 안되게 설정
 
 ## 3. 로그인 구현 방식
-### Session
-### JWT
+### Session - sesseion branch 확인
+### JWT - [개념정리중](https://github.com/f-lab-edu/Daily/issues/44)https://github.com/f-lab-edu/Daily/issues/44
