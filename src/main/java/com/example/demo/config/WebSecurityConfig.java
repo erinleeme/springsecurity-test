@@ -38,6 +38,6 @@ public class WebSecurityConfig {
     /*사용자를 인증하는 커스텀 필터를 Bean으로 추가*/
     @Bean
     public CustomAuthenticationFilter customAuthenticationFilter() throws Exception {
-        CustomAuthenticationFilter customAuthenticationFilter = new CustomAuthenticationFilter(authenticationManager)
+        CustomAuthenticationFilter customAuthenticationFilter = new CustomAuthenticationFilter(authenticationManager);
     }
 }

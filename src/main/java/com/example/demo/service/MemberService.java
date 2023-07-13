@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 
 import com.example.demo.dao.MemberDAO;
+import com.example.demo.dto.MemberResponseDTO;
 import com.example.demo.exception.ErrorCode;
 import com.example.demo.exception.IsExistCheckException;
 import com.example.demo.mapper.MemberMapper;
@@ -19,30 +20,27 @@ public class MemberService {
 
     private final MemberMapper memberMapper;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
-    private final HttpSession session;
 
     @Transactional
-    public String loginCheck(String email, String password) {
+    public MemberResponseDTO loginCheck(String email, String password) {
         MemberDAO memberDAO = memberMapper.selectMemberByEmail(email);
-
         /*회원 정보 유무 확인*/
         if(memberDAO == null) {
-            /*이때 에러 던져도 되는지 확인*/
             log.info("유효하지 않은 이메일 주소");
-            return "fail";
+            throw new IsExistCheckException(ErrorCode.NOT_FOUND_EMAIL);
         }
-
         /*비밀번호 일치 확인*/
         if(!bCryptPasswordEncoder.matches(password, memberDAO.getPassword())) {
             log.info("비밀번호 불일치");
-            return "fail";
+            return null;
         }
 
-        /*회원 정보가 있을 시 session에 해당 회원 정보를 저장*/
-        session.setAttribute("memberId", memberDAO.getMemberId());
-        session.setAttribute("email", memberDAO.getEmail());
-        session.setAttribute("nickname", memberDAO.getNickname());
+        MemberResponseDTO memberResponseDTO = MemberResponseDTO.builder()
+                .memberId(memberDAO.getMemberId())
+                .email(memberDAO.getEmail())
+                .nickname(memberDAO.getEmail())
+                .build();
 
-        return "success";
+        return memberResponseDTO;
     }
 }
