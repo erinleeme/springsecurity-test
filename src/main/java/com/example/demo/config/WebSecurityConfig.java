@@ -30,14 +30,7 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests((request) -> request.requestMatchers("/").permitAll()
                         /*admin 페이지와 로그인 페이지 접속 시 로그인 화면이 뜨도록 설정 */
                         .requestMatchers("/admin/**").authenticated()
-                        .anyRequest().permitAll())
-                .addFilterBefore(customAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class); /* 사용자 권한에 대한 인증 필터 적용되게 처리*/
+                        .anyRequest().permitAll());
         return httpSecurity.build();
-    }
-
-    /*사용자를 인증하는 커스텀 필터를 Bean으로 추가*/
-    @Bean
-    public CustomAuthenticationFilter customAuthenticationFilter() throws Exception {
-        CustomAuthenticationFilter customAuthenticationFilter = new CustomAuthenticationFilter(authenticationManager);
     }
 }

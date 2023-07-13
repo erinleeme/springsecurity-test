@@ -43,4 +43,7 @@ public class MemberService {
 
         return memberResponseDTO;
     }
+
+    /*Member 테이블에 refresh_column에 값 저장하는 함수*/
+
 }
