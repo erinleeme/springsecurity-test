@@ -33,7 +33,6 @@ dependencies {
 	implementation "org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.2"
 
 	/*Spring Security 적용*/
-	implementation 'org.springframework.security:spring-security-test'
 	implementation "org.springframework.boot:spring-boot-starter-security"
 
 	/*Valid*/

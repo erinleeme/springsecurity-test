@@ -2,10 +2,12 @@ package com.example.demo.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 /*스프링 시큐리티 설정을 위한 빈 생성을 위한 어노테이션*/
 @Configuration
@@ -28,9 +30,14 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests((request) -> request.requestMatchers("/").permitAll()
                         /*admin 페이지와 로그인 페이지 접속 시 로그인 화면이 뜨도록 설정 */
                         .requestMatchers("/admin/**").authenticated()
-                        .requestMatchers("/login").authenticated().anyRequest().permitAll())
-                .formLogin((form) -> form.loginPage("/login").permitAll())
-                .logout((logout) -> logout.permitAll());
+                        .anyRequest().permitAll())
+                .addFilterBefore(customAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class); /* 사용자 권한에 대한 인증 필터 적용되게 처리*/
         return httpSecurity.build();
+    }
+
+    /*사용자를 인증하는 커스텀 필터를 Bean으로 추가*/
+    @Bean
+    public CustomAuthenticationFilter customAuthenticationFilter() throws Exception {
+        CustomAuthenticationFilter customAuthenticationFilter = new CustomAuthenticationFilter(authenticationManager)
     }
 }
