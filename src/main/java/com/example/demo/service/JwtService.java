@@ -49,7 +49,7 @@ public class JwtService {
 
         /*JWT Payload에 들어갈 정보*/
         Claims claims = Jwts.claims()
-                .setSubject("access_token")
+                .setSubject("refresh_token")
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(currentTime+(14 * 24 * 60 * 60 * 1000))); /*토큰 만료일 -> 2주로 설정*/
         claims.put("id", memberId);
