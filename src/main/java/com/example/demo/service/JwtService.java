@@ -1,10 +1,10 @@
 package com.example.demo.service;
 
+import com.example.demo.utils.SHA256Util;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -15,7 +15,6 @@ public class JwtService {
 
     private final String key = "SECRET_KEY";
     private final MemberService memberService;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     /*Access Token 생성 함수*/
     public String generateAccessToken(Long memberId, String memberType) {
@@ -64,7 +63,7 @@ public class JwtService {
                 .compact();
 
         /*Hashing 처리*/
-        String hashRefreshtoken = bCryptPasswordEncoder.encode(refreshToken);
+        String hashRefreshtoken = SHA256Util.encrypt(refreshToken);
 
         /*DB 저장*/
         memberService.addRefreshToken(memberId, hashRefreshtoken);
