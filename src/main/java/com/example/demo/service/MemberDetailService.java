@@ -1,7 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.dao.MemberDAO;
-import com.example.demo.dto.Member;
+import com.example.demo.dto.MemberDetail;
 import com.example.demo.exception.ErrorCode;
 import com.example.demo.exception.IsExistCheckException;
 import com.example.demo.mapper.MemberMapper;
@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class UserDetailsServiceImpl implements UserDetailsService {
+public class MemberDetailService implements UserDetailsService {
 
     private final MemberMapper memberMapper;
 
@@ -31,6 +31,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             throw new IsExistCheckException(ErrorCode.NOT_FOUND_EMAIL);
         }
 
-        return new Member(memberDAO);
+        return new MemberDetail(memberDAO);
     }
 }

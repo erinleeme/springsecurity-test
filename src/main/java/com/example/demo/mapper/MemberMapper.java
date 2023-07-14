@@ -8,5 +8,5 @@ import org.apache.ibatis.annotations.Param;
 public interface MemberMapper {
     MemberDAO selectMemberByEmail(String email);
 
-    void addRefreshToken(@Param("memberId") Long memberId, @Param("hashRefreshToken") String hashRefreshtoken);
+    void addRefreshToken(@Param("email") String email, @Param("hashRefreshToken") String hashRefreshToken);
 }

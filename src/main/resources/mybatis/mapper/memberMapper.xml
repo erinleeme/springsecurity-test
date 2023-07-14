@@ -13,7 +13,7 @@
 
     <update id="addRefreshToken" parameterType="java.util.Map">
         UPDATE member
-        SET refresh_token = #{hashRefreshtoken}
-        WHERE member_id = #{memberId}
+        SET refresh_token = #{hashRefreshToken}
+        WHERE email = #{email}
     </update>
 </mapper>

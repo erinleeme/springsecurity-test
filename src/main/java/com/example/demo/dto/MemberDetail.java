@@ -7,11 +7,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 
 /*사용자의 정보를 저장하는 인터페이스 구현*/
-public class Member implements UserDetails {
+public class MemberDetail implements UserDetails {
 
     private final MemberDAO memberDAO;
 
-    public Member(MemberDAO memberDAO) {
+    public MemberDetail(MemberDAO memberDAO) {
         this.memberDAO = memberDAO;
     }
 

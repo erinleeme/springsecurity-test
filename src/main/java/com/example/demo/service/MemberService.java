@@ -20,37 +20,10 @@ public class MemberService {
     private final MemberMapper memberMapper;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    @Transactional
-    public MemberResponseDTO loginCheck(String email, String password) {
-
-
-
-
-
-
-        MemberDAO memberDAO = memberMapper.selectMemberByEmail(email);
-        /*회원 정보 유무 확인*/
-        if(memberDAO == null) {
-            log.info("유효하지 않은 이메일 주소");
-            throw new IsExistCheckException(ErrorCode.NOT_FOUND_EMAIL);
-        }
-        /*비밀번호 일치 확인*/
-        if(!bCryptPasswordEncoder.matches(password, memberDAO.getPassword())) {
-            log.info("비밀번호 불일치");
-            return null;
-        }
-
-        MemberResponseDTO memberResponseDTO = MemberResponseDTO.builder()
-                .memberId(memberDAO.getMemberId())
-                .email(memberDAO.getEmail())
-                .nickname(memberDAO.getEmail())
-                .build();
-
-        return memberResponseDTO;
-    }
-
     /*Member 테이블에 refresh_column에 값 저장하는 함수*/
-    public void addRefreshToken(Long memberId, String hashRefreshtoken) {
-        memberMapper.addRefreshToken(memberId, hashRefreshtoken);
+    public void addRefreshToken(String email, String refreshToken) {
+        /*Hashing 처리*/
+        String hashRefreshToken = bCryptPasswordEncoder.encode(refreshToken);
+        memberMapper.addRefreshToken(email, hashRefreshToken);
     }
 }
