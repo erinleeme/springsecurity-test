@@ -6,9 +6,9 @@ import com.example.demo.dto.MemberResponseDTO;
 import com.example.demo.exception.ErrorCode;
 import com.example.demo.exception.IsExistCheckException;
 import com.example.demo.mapper.MemberMapper;
+import com.example.demo.utils.SHA256Util;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberService {
 
     private final MemberMapper memberMapper;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Transactional
     public MemberResponseDTO loginCheck(String email, String password) {
@@ -29,7 +28,7 @@ public class MemberService {
             throw new IsExistCheckException(ErrorCode.NOT_FOUND_EMAIL);
         }
         /*비밀번호 일치 확인*/
-        if(!bCryptPasswordEncoder.matches(password, memberDAO.getPassword())) {
+        if(!SHA256Util.match(password, memberDAO.getPassword())) {
             log.info("비밀번호 불일치");
             return null;
         }
