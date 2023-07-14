@@ -27,7 +27,8 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
-                .authorizeHttpRequests((request) -> request.requestMatchers("/").permitAll()
+                .authorizeHttpRequests((request) -> request
+                        .requestMatchers("/").permitAll()
                         /*admin 페이지와 로그인 페이지 접속 시 로그인 화면이 뜨도록 설정 */
                         .requestMatchers("/admin/**").authenticated()
                         .anyRequest().permitAll());

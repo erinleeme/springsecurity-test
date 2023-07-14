@@ -22,6 +22,12 @@ public class MemberService {
 
     @Transactional
     public MemberResponseDTO loginCheck(String email, String password) {
+
+
+
+
+
+
         MemberDAO memberDAO = memberMapper.selectMemberByEmail(email);
         /*회원 정보 유무 확인*/
         if(memberDAO == null) {

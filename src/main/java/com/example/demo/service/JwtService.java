@@ -4,6 +4,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -18,16 +19,14 @@ public class JwtService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     /*Access Token 생성 함수*/
-    public String generateAccessToken(Long memberId, String memberType) {
+    public String generateAccessToken(Authentication authentication) {  /*Authentication 클래스를 인자로 받음*/
         long currentTime = (new Date()).getTime();
 
         /*JWT Payload에 들어갈 정보*/
         Claims claims = Jwts.claims()
-                .setSubject("access_token")
-                .setIssuedAt(new Date()) /*토큰 생성일*/
-                .setExpiration(new Date(currentTime+(3 * 24 * 60 * 60 * 1000))); /*토큰 만료일 -> 3일로 설정*/
-        claims.put("id", memberId);
-        claims.put("role", memberType);
+                .setSubject(authentication.getName())
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(currentTime+(3 * 24 * 60 * 60 * 1000)));
 
         /*토큰 생성*/
         String accessToken = Jwts.builder()
@@ -47,7 +46,6 @@ public class JwtService {
     public String generateRefreshToken(Long memberId, String memberType) {
         long currentTime = (new Date()).getTime();
 
-        /*JWT Payload에 들어갈 정보*/
         Claims claims = Jwts.claims()
                 .setSubject("refresh_token")
                 .setIssuedAt(new Date())
