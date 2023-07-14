@@ -10,4 +10,10 @@
         WHERE
         email = #{email}
     </select>
+
+    <update id="addRefreshToken" parameterType="java.util.Map">
+        UPDATE member
+        SET refresh_token = #{hashRefreshtoken}
+        WHERE member_id = #{memberId}
+    </update>
 </mapper>
