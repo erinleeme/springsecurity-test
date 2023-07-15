@@ -5,7 +5,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
@@ -35,8 +34,7 @@ public class WebSecurityConfig {
                         .requestMatchers("/login").authenticated().anyRequest().permitAll())
                 .formLogin((form) -> form.loginPage("/login")
                         .defaultSuccessUrl("/") /*로그인 성공하면 도착할 주소*/
-                        .permitAll())
-                .logout((logout) -> logout.permitAll());
+                        .permitAll());
         return httpSecurity.build();
     }
 }
