@@ -14,5 +14,5 @@
 implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.5'
 ```
 ## 2. 로그인 구현 방식
-Session : https://github.com/erinleeme/springsecurity-test/tree/session
+Session : https://github.com/erinleeme/springsecurity-test/tree/session <br>
 JWT : https://github.com/erinleeme/springsecurity-test/tree/security-token
