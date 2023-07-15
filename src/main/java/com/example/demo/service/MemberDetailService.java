@@ -30,7 +30,6 @@ public class MemberDetailService implements UserDetailsService {
             log.info("유효하지 않은 이메일 주소");
             throw new IsExistCheckException(ErrorCode.NOT_FOUND_EMAIL);
         }
-
         return new MemberDetail(memberDAO);
     }
 }

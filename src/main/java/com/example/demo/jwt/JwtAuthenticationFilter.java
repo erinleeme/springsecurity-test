@@ -1,12 +1,10 @@
 package com.example.demo.jwt;
 
-import com.example.demo.service.JwtTokenProvider;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,30 +19,20 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private final JwtTokenProvider jwtTokenProvider;
-    private final UserDetailsService userDetailsService;
+    private final JwtProvider jwtProvider;
 
     /*SecurityContextHolder에 JWT를 저장하는 함수*/
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         /*요청 메세지에서 JWT 추출*/
-        String jwt = resolveToken(request);
-
+        String jwt = jwtProvider.resolveToken(request);
         /*토큰 검증*/
-        if (StringUtils.hasText(jwt) && jwtTokenProvider.validateToken(jwt)) {
-            String username = jwtTokenProvider.getUsernameFromToken(jwt);
-            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-
-            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+        if (StringUtils.hasText(jwt) && jwtProvider.validateToken(jwt)) {
+            Authentication authentication = jwtProvider.getAuthentication(jwt);
+            /*검증 통과하면 SecurityContextHolder에 저장*/
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
-    }
 
-    private String resolveToken(HttpServletRequest request) {
-        String bearerToken = request.getHeader("Authorization"); /*Authorization: Bearer (JWT String값)*/
-        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
-            return bearerToken.substring(7);
-        }
-        return null;
+        filterChain.doFilter(request, response); /*다음 필터 체인으로 넘어가도록 함*/
     }
 }

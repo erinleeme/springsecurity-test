@@ -7,6 +7,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -32,12 +34,20 @@ public class WebSecurityConfig {
     /*인증 단계 필터 설정*/
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
+
+        httpSecurity
+                .csrf(AbstractHttpConfigurer::disable)
+                /*httpBasic:request header에 id와 password값을 직접 날리는 방식*/
+                .httpBasic(AbstractHttpConfigurer::disable);
+
         httpSecurity
                 .authorizeHttpRequests((request) -> request
                         .requestMatchers("/").permitAll()
-                        /*admin 페이지와 로그인 페이지 접속 시 로그인 화면이 뜨도록 설정 */
                         .requestMatchers("/admin/**").authenticated()
                         .anyRequest().permitAll());
+        /*Session 비활성화*/
+        httpSecurity.sessionManagement((session) -> session
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         /*먼저 사용자 인증 처리 후 token 인증 필터가 수행되도록 설정*/
         httpSecurity.addFilterAfter(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
