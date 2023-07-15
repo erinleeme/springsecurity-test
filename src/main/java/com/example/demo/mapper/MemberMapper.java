@@ -1,9 +1,9 @@
 package com.example.demo.mapper;
 
-import com.example.demo.dao.MemberDAO;
+import com.example.demo.dto.MemberDetail;
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
 public interface MemberMapper {
-    MemberDAO selectMemberByEmail(String email);
+    MemberDetail selectMemberByEmail(String email);
 }
