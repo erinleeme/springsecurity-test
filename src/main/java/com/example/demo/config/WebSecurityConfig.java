@@ -31,7 +31,9 @@ public class WebSecurityConfig {
         httpSecurity.authorizeHttpRequests((request) -> request.requestMatchers("/").permitAll()
                         /*admin 페이지와 로그인 페이지 접속 시 로그인 화면이 뜨도록 설정 */
                         .requestMatchers("/admin/**").authenticated()
-                        .requestMatchers("/login").authenticated().anyRequest().permitAll())
+                        .requestMatchers("/login").authenticated()
+//                        .requestMatchers("/h2-console/**").permitAll()
+                        .anyRequest().permitAll())
                 .formLogin((form) -> form.loginPage("/login")
                         .defaultSuccessUrl("/") /*로그인 성공하면 도착할 주소*/
                         .permitAll());
