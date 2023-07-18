@@ -16,7 +16,7 @@ public class MemberController {
     @PostMapping("/members")
     public void createMember(@RequestBody @Valid MemberRequestDTO memberRequestDTO) {
         System.out.println("여기까진 오니?createMember");
-        int result = memberService.createMember(memberRequestDTO);
-        System.out.println(result);
+        memberService.createMember(memberRequestDTO);
+        System.out.println("createMember 끝");
     }
 }

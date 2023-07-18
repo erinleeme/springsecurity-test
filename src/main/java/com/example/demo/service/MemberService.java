@@ -15,10 +15,10 @@ public class MemberService {
 
     private final MemberMapper memberMapper;
 
-    public int createMember(MemberRequestDTO memberRequestDTO) {
+    public void createMember(MemberRequestDTO memberRequestDTO) {
 
-        int isMember = memberMapper.getMember(memberRequestDTO.getEmail());
-        if (isMember > 0) throw new DuplicateCheckException(ErrorCode.IS_EXIST_USER_BY_EMAIL);
+        Integer isMember = memberMapper.getMember(memberRequestDTO.getEmail());
+        if (isMember != null) { throw new DuplicateCheckException(ErrorCode.IS_EXIST_USER_BY_EMAIL); }
 
         System.out.println("여기까진 오니?1");
 
@@ -31,15 +31,11 @@ public class MemberService {
                 .memberType(memberRequestDTO.getMemberType())
                 .build();
 
-
-
         System.out.println("여기까진 오니?2" + memberDAO);
 
-        int result = memberMapper.createMember(memberDAO);
+        memberMapper.createMember(memberDAO);
 
         System.out.println("여기까진 오니?3");
-
-        return result;
     }
 
 }
