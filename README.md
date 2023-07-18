@@ -11,7 +11,7 @@
 - 회원가입
 - 로그인 : Session, JWT
 ## build.gradle 설정
-[스프링 시큐리티 6.1.1 버전 사용](https://spring.io/projects/spring-security#learn)
+[스프링 시큐리티 6.1.1 버전 사용](https://spring.io/projects/spring-security#learn) <br>
 [H2 Database](https://github.com/erinleeme/springsecurity-test/wiki/H2-Database)
 
 ```java
