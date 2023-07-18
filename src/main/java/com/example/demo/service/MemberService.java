@@ -18,7 +18,7 @@ public class MemberService {
     private final MemberMapper memberMapper;
 
     public void createMember(MemberRequestDTO memberRequestDTO) {
-        Integer isMember = memberMapper.getMember(memberRequestDTO.getEmail());
+        MemberDAO isMember = memberMapper.selectMemberByEmail(memberRequestDTO.getEmail());
         if (isMember != null) { throw new DuplicateCheckException(ErrorCode.IS_EXIST_USER_BY_EMAIL); }
 
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();

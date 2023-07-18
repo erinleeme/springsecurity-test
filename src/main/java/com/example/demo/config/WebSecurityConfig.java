@@ -22,7 +22,7 @@ public class WebSecurityConfig {
     }
 
     /*스프링 시큐리티 체인 빈 생성 - 요청 URL 설정*/
-    /*인증 단계 필터 설정*/
+    /*기본 필터 설정*/
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
@@ -30,14 +30,15 @@ public class WebSecurityConfig {
                         .disable())
                 .httpBasic(AbstractHttpConfigurer::disable); /*httpBasic의 낮은 수준의 보안 문제로 비활성화*/
 
-        httpSecurity.authorizeHttpRequests((request) -> request.requestMatchers("/").permitAll()
+        httpSecurity.authorizeHttpRequests((request) -> request
                         /*admin 페이지와 로그인 페이지 접속 시 로그인 화면이 뜨도록 설정 */
-                        .requestMatchers("/admin/**").authenticated()
-                        .requestMatchers("/login").authenticated()
-                        .anyRequest().permitAll())
-                .formLogin((form) -> form.loginPage("/login")
-                        .defaultSuccessUrl("/") /*로그인 성공하면 도착할 주소*/
-                        .permitAll());
+                        .requestMatchers("/admin").hasRole("ADMIN")
+                        .requestMatchers("/member").hasRole("USER")
+                .anyRequest().permitAll())
+                .formLogin((form) -> form
+                .defaultSuccessUrl("/") /*로그인 성공하면 도착할 주소 설정*/
+                .permitAll());;
+
         return httpSecurity.build();
     }
 }
