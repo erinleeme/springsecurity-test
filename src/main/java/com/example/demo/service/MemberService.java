@@ -1,16 +1,14 @@
 package com.example.demo.service;
 
-
 import com.example.demo.dao.MemberDAO;
+import com.example.demo.dto.request.MemberRequestDTO;
+import com.example.demo.exception.DuplicateCheckException;
 import com.example.demo.exception.ErrorCode;
-import com.example.demo.exception.IsExistCheckException;
 import com.example.demo.mapper.MemberMapper;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
@@ -18,29 +16,22 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberService {
 
     private final MemberMapper memberMapper;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
-    private final HttpSession session;
 
-    @Transactional
-    public String loginCheck(String email, String password) {
-        MemberDAO memberDAO = memberMapper.selectMemberByEmail(email);
+    public void createMember(MemberRequestDTO memberRequestDTO) {
+        Integer isMember = memberMapper.getMember(memberRequestDTO.getEmail());
+        if (isMember != null) { throw new DuplicateCheckException(ErrorCode.IS_EXIST_USER_BY_EMAIL); }
 
-        /*회원 정보 유무 확인*/
-        if(memberDAO == null) {
-            return "fail";
-        }
+        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
-        /*비밀번호 일치 확인*/
-        if(!bCryptPasswordEncoder.matches(password, memberDAO.getPassword())) {
-            log.info("비밀번호 불일치");
-            return "fail";
-        }
+        MemberDAO memberDAO = MemberDAO.builder()
+                .email(memberRequestDTO.getEmail())
+                .password(bCryptPasswordEncoder.encode(memberRequestDTO.getPassword()))
+                .nickname(memberRequestDTO.getNickname())
+                .memberType(memberRequestDTO.getMemberType())
+                .build();
 
-        /*회원 정보가 있을 시 session에 해당 회원 정보를 저장*/
-        session.setAttribute("memberId", memberDAO.getMemberId());
-        session.setAttribute("email", memberDAO.getEmail());
-        session.setAttribute("nickname", memberDAO.getNickname());
+        log.info("MemberDAO : " + memberDAO);
 
-        return "success";
+        memberMapper.createMember(memberDAO);
     }
 }

@@ -1,25 +1,24 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.request.MemberRequestDTO;
 import com.example.demo.service.MemberService;
-import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
-
-@Controller
-@RequiredArgsConstructor
 @Slf4j
+@RestController
+@RequiredArgsConstructor
 public class MemberController {
-
     private final MemberService memberService;
 
-    /*로그인 함수*/
-    @ResponseBody
-    @PostMapping("/login")
-    public String loginCheck(@RequestParam String email, @RequestParam String password) {
-        log.info("login 정보 : " + email);
-        return memberService.loginCheck(email, password); /*성공하면 success, 실패하면 fail 반환*/
+    @PostMapping("/members")
+    public void createMember(@RequestBody @Valid MemberRequestDTO memberRequestDTO) {
+        log.info("[MemberController] createMember 접속 완료!");
+        memberService.createMember(memberRequestDTO);
+        log.info("[MemberController] createMember 작업 완료!");
     }
 }

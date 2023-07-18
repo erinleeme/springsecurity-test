@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
@@ -25,12 +26,18 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
-                .authorizeHttpRequests((request) -> request.requestMatchers("/").permitAll()
+                .csrf((csrf)->csrf.ignoringRequestMatchers("/h2-console/**") /*h2 db를 사용하기 위해 csrf가 적용되지 않게 해당 url을 disable 시켜야한다.*/
+                        .disable())
+                .httpBasic(AbstractHttpConfigurer::disable); /*httpBasic의 낮은 수준의 보안 문제로 비활성화*/
+
+        httpSecurity.authorizeHttpRequests((request) -> request.requestMatchers("/").permitAll()
                         /*admin 페이지와 로그인 페이지 접속 시 로그인 화면이 뜨도록 설정 */
                         .requestMatchers("/admin/**").authenticated()
-                        .requestMatchers("/login").authenticated().anyRequest().permitAll())
-                .formLogin((form) -> form.loginPage("/login").permitAll())
-                .logout((logout) -> logout.permitAll());
+                        .requestMatchers("/login").authenticated()
+                        .anyRequest().permitAll())
+                .formLogin((form) -> form.loginPage("/login")
+                        .defaultSuccessUrl("/") /*로그인 성공하면 도착할 주소*/
+                        .permitAll());
         return httpSecurity.build();
     }
 }
