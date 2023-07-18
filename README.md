@@ -1,30 +1,34 @@
 # springsecurity-test
-스프링시큐리티 테스트
-
-# Spring Security 적용
-
-## 1. build.gradle 설정
-
-스프링 시큐리티 의존성 추가 
-<br>
-스프링 시큐리티 6.1.1 버전 사용
-[Spring Security 6.1.1 GA, Current](https://spring.io/projects/spring-security#learn)
+스프링 시큐리티 테스트 레퍼지토리입니다. <br>
+스프링 시큐리티로 회원가입 및 로그인을 구현하기 위함이 목적입니다.
+## 기본 환경
+- SpringBoot 3.1.1
+- MyBatis
+- H2DB
+- Gradle
+- JDK 17
+## Spring Security 적용
+- 회원가입
+- 로그인 : Session, JWT
+## build.gradle 설정
+[스프링 시큐리티 6.1.1 버전 사용](https://spring.io/projects/spring-security#learn) <br>
+[H2 Database](https://github.com/erinleeme/springsecurity-test/wiki/H2-Database)
 
 ```java
+/*DB*/
+implementation "org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.2"
+implementation group: 'com.h2database', name: 'h2', version: '2.1.214'
+
 /*Spring Security 적용*/
-implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6:3.1.1.RELEASE'
 implementation 'org.springframework.security:spring-security-test'
 implementation "org.springframework.boot:spring-boot-starter-security"
+
+/*Valid*/
+implementation group: 'org.springframework.boot', name: 'spring-boot-starter-validation', version: '3.1.0'
 ```
+## 회원가입 API
+[회원가입 구현](https://github.com/erinleeme/springsecurity-test/wiki/%ED%9A%8C%EC%9B%90%EA%B0%80%EC%9E%85-API)
 
-## 2. 스프링 시큐리티 필터 적용
-
-위에서 말한 스프링 시큐리티 필터를 목적에 맞게 설정을 해줘야한다.
-- 로그인, 마이페이지, 관리자 페이지와 같이 회원 권한을 확인해야하는 요청인 경우만 인증 적용
-- 그 외에 메인페이지 접속 등과 같이 권한 확인이 필요없는 요청인 경우에는 인증 적용 안되게 설정
-- 아이디로 먼저 해당 Member가 있는지 확인 <br>
-  **여기서 스프링 시큐리티에서 제공하는 UserDetailsService를 꼭 사용해야하나?**
-  
-  <br>
-- 비밀번호를 받아 비밀번호는 스프링 시큐리티 암호화 알고리즘으로 Hash값으로 변환
-- 변환된 비밀번호와 받은 아이디를 DB로 보내어 일치하는지 확인
+## 로그인 API
+Session : https://github.com/erinleeme/springsecurity-test/tree/session <br>
+JWT : https://github.com/erinleeme/springsecurity-test/tree/security-token

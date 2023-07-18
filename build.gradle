@@ -29,8 +29,9 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
 	/*DB*/
-	implementation group: 'org.mariadb.jdbc', name: 'mariadb-java-client', version: '3.1.4'
 	implementation "org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.2"
+	implementation group: 'com.h2database', name: 'h2', version: '2.1.214'
+
 
 	/*Spring Security 적용*/
 	implementation 'org.springframework.security:spring-security-test'
