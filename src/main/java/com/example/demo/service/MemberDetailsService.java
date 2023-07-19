@@ -24,10 +24,9 @@ public class MemberDetailsService implements UserDetailsService {
         MemberDAO member = memberMapper.selectMemberByEmail(email);
         /*회원 정보 유무 확인*/
         if(member == null) {
-            log.info("유효하지 않은 이메일 주소");
+            log.error("LOGIN : 유효하지 않은 이메일 주소");
             throw new IsExistCheckException(ErrorCode.NOT_FOUND_EMAIL);
         }
-
         return new MemberDetail(member);
     }
 }

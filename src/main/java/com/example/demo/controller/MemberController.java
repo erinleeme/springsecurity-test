@@ -1,21 +1,14 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.request.MemberLoginDTO;
 import com.example.demo.dto.request.MemberRequestDTO;
 import com.example.demo.service.MemberService;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolderStrategy;
-import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
-import org.springframework.security.web.context.SecurityContextRepository;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,9 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class MemberController {
     private final MemberService memberService;
-    private SecurityContextRepository securityContextRepository = new HttpSessionSecurityContextRepository();
-    private AuthenticationManager authenticationManager;
-    private SecurityContextHolderStrategy securityContextHolderStrategy;
+    private final HttpSession httpSession;
 
     /*회원가입*/
     @PostMapping("/members")
@@ -37,23 +28,16 @@ public class MemberController {
         log.info("[MemberController] createMember 작업 완료!");
     }
 
-    /*로그인*/
-    @PostMapping("/login")
-    public void login(@RequestBody @Valid MemberLoginDTO memberLoginDTO, HttpServletRequest request, HttpServletResponse response) {
-
-        log.info("[MemberController] login method 접속");
-
-        /*1. 사용자가 보낸 username과 password로 usertoken 생성*/
-        UsernamePasswordAuthenticationToken userToken = UsernamePasswordAuthenticationToken.unauthenticated(
-                memberLoginDTO.getEmail(), memberLoginDTO.getPassword());
-
-        /*2. usertoken으로 AuthenticationManager로 보내 인증 과정 거친 Authentication 객체 반환*/
-        Authentication authentication = authenticationManager.authenticate(userToken);
-
-        /*3. 인증 과정에 통과한 Authentication 객체를 SecurityContextHolder에 저장*/
-        SecurityContext securityContext = securityContextHolderStrategy.createEmptyContext();
-        securityContext.setAuthentication(authentication);
-        securityContextHolderStrategy.setContext(securityContext);
-        securityContextRepository.saveContext(securityContext, request, response);
+    /*로그인 session check*/
+    @GetMapping("/session")
+    public void sessionCheck() {
+        if (httpSession != null) {
+            SecurityContext securityContext = (SecurityContext) httpSession.getAttribute("SPRING_SECURITY_CONTEXT");
+            if (securityContext != null) {
+                Authentication authentication = securityContext.getAuthentication();
+                String username = authentication.getName();
+                log.info("인증된 사용자 이름: " + username);
+            }
+        }
     }
 }
