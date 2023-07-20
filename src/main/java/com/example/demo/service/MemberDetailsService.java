@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.dao.MemberDAO;
+import com.example.demo.dto.request.MemberDetail;
 import com.example.demo.exception.ErrorCode;
 import com.example.demo.exception.IsExistCheckException;
 import com.example.demo.mapper.MemberMapper;
@@ -23,9 +24,9 @@ public class MemberDetailsService implements UserDetailsService {
         MemberDAO member = memberMapper.selectMemberByEmail(email);
         /*회원 정보 유무 확인*/
         if(member == null) {
-            log.info("유효하지 않은 이메일 주소");
+            log.error("LOGIN : 유효하지 않은 이메일 주소");
             throw new IsExistCheckException(ErrorCode.NOT_FOUND_EMAIL);
         }
-        return member;
+        return new MemberDetail(member);
     }
 }

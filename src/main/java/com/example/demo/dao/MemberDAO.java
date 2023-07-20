@@ -16,7 +16,7 @@ import java.util.Collection;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class MemberDAO implements UserDetails {
+public class MemberDAO {
 
     private Long memberId;
     private String email;
@@ -26,44 +26,4 @@ public class MemberDAO implements UserDetails {
     private LocalDateTime createdDate;
     private LocalDateTime updateDate;
 
-    /*사용자에게 부여된 권한을 지정한 컬렉션 반환*/
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
-    }
-
-    /*계정 정보*/
-    @Override
-    public String getPassword() {
-        return this.password;
-    }
-
-    @Override
-    public String getUsername() {
-        return this.email;
-    }
-
-    /*계정 만료 유무*/
-    @Override
-    public boolean isAccountNonExpired() {
-        return false;
-    }
-
-    /*계정 잠금 상태 유무*/
-    @Override
-    public boolean isAccountNonLocked() {
-        return false;
-    }
-
-    /*비밀번호 만료 유무*/
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return false;
-    }
-
-    /*계정 활성화 유무*/
-    @Override
-    public boolean isEnabled() {
-        return false;
-    }
 }

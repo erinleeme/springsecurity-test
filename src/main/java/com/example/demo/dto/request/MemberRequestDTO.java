@@ -48,5 +48,4 @@ public class MemberRequestDTO {
     @NotNull(message = "맴버 타입은 필수 값입니다.")
     @EnumValidator(enumClass = MemberType.class, message = "멤버 형식이 일치하지 않습니다.")
     private MemberType memberType;
-
 }

@@ -6,6 +6,8 @@ server:
       charset: UTF-8
       enabled: true
       force: true
+    session:
+      timeout: 60
 
 spring:
   datasource:
@@ -17,6 +19,8 @@ spring:
     user:
       name: admin
       password: admin
+      roles: USER
+
 
 mybatis:
   mapper-locations: mybatis/mapper/*.xml
