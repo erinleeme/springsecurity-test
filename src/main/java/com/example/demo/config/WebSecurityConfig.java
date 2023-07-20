@@ -68,9 +68,9 @@ public class WebSecurityConfig {
                 
         /*Session 설정*/
         httpSecurity.sessionManagement((session) -> session
-                /*SpringSecurity Session 정책
+                /*SpringSecurity Session 정책 SessionCreationPolicy
                 * ALWAYS : 항상 세션 생성
-                * IF_REQUIRED : 필요할 때
+                * IF_REQUIRED : 필요할 때(Default)
                 * NEVER : 새로 생성하지 않고 기존에 있는 Session 사용
                 * STATELESS : 새로 생성하지도 않고 기존에 있는 Session도 사용하지 않음 -> Session을 사용하지 않는 경우 선택
                 * */

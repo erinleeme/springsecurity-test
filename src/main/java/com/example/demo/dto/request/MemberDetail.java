@@ -20,7 +20,7 @@ public class MemberDetail implements UserDetails {
         this.role = "ROLE_" + memberDAO.getMemberType();
     }
 
-    /*사용자에게 부여된 권한을 지정한 컬렉션 반환*/
+    /*사용자에게 부여된 권한을 지정*/
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.singletonList(new SimpleGrantedAuthority(this.role));

@@ -30,14 +30,19 @@ public class MemberController {
 
     /*로그인 session check*/
     @GetMapping("/session")
-    public void sessionCheck() {
+    public String sessionCheck() {
+        String result = "no data";
         if (httpSession != null) {
             SecurityContext securityContext = (SecurityContext) httpSession.getAttribute("SPRING_SECURITY_CONTEXT");
             if (securityContext != null) {
                 Authentication authentication = securityContext.getAuthentication();
                 String username = authentication.getName();
-                log.info("인증된 사용자 이름: " + username);
+                String role = authentication.getAuthorities().toString();
+                log.info("인증된 사용자 이름 : " + username);
+                log.info("인증된 사용자 권한 : " + role);
+                result = username;
             }
         }
+        return "인증된 사용자 이름 : " + result;
     }
 }
