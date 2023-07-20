@@ -1,6 +1,7 @@
 package com.example.demo.config;
 
 import com.example.demo.jwt.JwtAuthenticationFilter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,11 +10,15 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
+@Slf4j
 /*스프링 시큐리티 설정을 위한 빈 생성을 위한 어노테이션*/
 @Configuration
 /*모든 URL 요청은 스프링 시큐리티를 거치게 하는 어노테이션
@@ -31,22 +36,48 @@ public class WebSecurityConfig {
     }
 
     /*스프링 시큐리티 체인 빈 생성 - 요청 URL 설정*/
-    /*인증 단계 필터 설정*/
+    /*기본 필터 설정*/
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
-
         httpSecurity
-                .csrf(AbstractHttpConfigurer::disable)
-                /*httpBasic:request header에 id와 password값을 직접 날리는 방식*/
-                .httpBasic(AbstractHttpConfigurer::disable);
+                .csrf((csrf)->csrf.ignoringRequestMatchers("/h2-console/**") /*h2 db를 사용하기 위해 csrf가 적용되지 않게 해당 url을 disable 시켜야한다.*/
+                        .disable())
+                .httpBasic(AbstractHttpConfigurer::disable); /*httpBasic의 낮은 수준의 보안 문제로 비활성화*/
 
-        httpSecurity
-                .authorizeHttpRequests((request) -> request
-                        .requestMatchers("/").permitAll()
-                        .requestMatchers("/admin/**").authenticated()
-                        .anyRequest().permitAll());
+        httpSecurity.authorizeHttpRequests((request) -> request
+                        /*admin 페이지와 로그인 페이지 접속 시 로그인 화면이 뜨도록 설정 */
+                        .requestMatchers("/admin").hasRole("ADMIN")
+                        .requestMatchers("/member").hasRole("USER")
+                        .anyRequest().permitAll())
+                .formLogin((form) -> form
+                        .loginProcessingUrl("/login") /*로그인 Form Action URL*/
+                        .successHandler(new AuthenticationSuccessHandler() {
+                            /*로그인 성공했을 때*/
+                            @Override
+                            public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
+                                log.info("authentication : " + authentication.getName());
+                                response.sendRedirect("/");
+                            }
+                        })
+                        .failureHandler(new AuthenticationFailureHandler() {
+                            /*로그인 실패했을 때*/
+                            @Override
+                            public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException {
+                                log.info("exception : " + exception.getMessage());
+                                response.sendRedirect("/login");
+                            }
+                        })
+                        .permitAll());;
+
+
         /*Session 비활성화*/
         httpSecurity.sessionManagement((session) -> session
+                /*SpringSecurity Session 정책 SessionCreationPolicy
+                 * ALWAYS : 항상 세션 생성
+                 * IF_REQUIRED : 필요할 때(Default)
+                 * NEVER : 새로 생성하지 않고 기존에 있는 Session 사용
+                 * STATELESS : 새로 생성하지도 않고 기존에 있는 Session도 사용하지 않음 -> Session을 사용하지 않는 경우 선택
+                 * */
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         /*먼저 사용자 인증 처리 후 token 인증 필터가 수행되도록 설정*/
