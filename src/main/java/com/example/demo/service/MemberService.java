@@ -4,16 +4,12 @@ package com.example.demo.service;
 import com.example.demo.dao.MemberDAO;
 import com.example.demo.dto.request.MemberRequestDTO;
 import com.example.demo.exception.DuplicateCheckException;
-import com.example.demo.dto.MemberResponseDTO;
 import com.example.demo.exception.ErrorCode;
-import com.example.demo.exception.IsExistCheckException;
 import com.example.demo.mapper.MemberMapper;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service

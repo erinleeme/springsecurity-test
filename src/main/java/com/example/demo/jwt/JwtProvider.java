@@ -1,7 +1,7 @@
 package com.example.demo.jwt;
 
 import com.example.demo.mapper.MemberMapper;
-import com.example.demo.service.MemberDetailService;
+import com.example.demo.service.MemberDetailsService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -12,8 +12,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.StringUtils;
@@ -29,7 +27,7 @@ public class JwtProvider {
 
     @Value("${jwt.secret}") /*application.yaml에 설정해놓은 key*/
     private final String key;
-    private final MemberDetailService memberDetailsService;
+    private final MemberDetailsService memberDetailsService;
     private final MemberMapper memberMapper;
 
     private Key getSecretKey(String key) {

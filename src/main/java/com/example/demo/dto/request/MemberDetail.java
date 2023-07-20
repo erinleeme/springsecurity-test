@@ -1,44 +1,48 @@
-package com.example.demo.dto;
+package com.example.demo.dto.request;
 
 import com.example.demo.dao.MemberDAO;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.Collections;
 
-/*사용자의 정보를 저장하는 인터페이스 구현*/
 public class MemberDetail implements UserDetails {
 
-    private final MemberDAO memberDAO;
+    private String email;
+    private String password;
+    private String role;
 
     public MemberDetail(MemberDAO memberDAO) {
-        this.memberDAO = memberDAO;
+        this.email = memberDAO.getEmail();
+        this.password = memberDAO.getPassword();
+        this.role = "ROLE_" + memberDAO.getMemberType();
     }
 
-    /*사용자에게 부여된 권한을 지정한 컬렉션 반환*/
+    /*사용자에게 부여된 권한을 지정*/
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return Collections.singletonList(new SimpleGrantedAuthority(this.role));
     }
 
-    /*계정 정보*/
+    /*계정 비밀번호*/
     @Override
-    public String getPassword() {
-        return memberDAO.getPassword();
-    }
+    public String getPassword() { return this.password; }
 
+    /*계정 이메일*/
     @Override
     public String getUsername() {
-        return memberDAO.getEmail();
+        return this.email;
     }
 
-    /*계정 만료 유무*/
+    /*계정 만료 여부*/
     @Override
     public boolean isAccountNonExpired() {
         return true;
     }
 
-    /*계정 잠금 상태 유무*/
+    /*계정 잠금 상태 여부*/
     @Override
     public boolean isAccountNonLocked() {
         return true;
