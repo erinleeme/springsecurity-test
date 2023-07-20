@@ -6,8 +6,5 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface MemberMapper {
     MemberDAO selectMemberByEmail(String email);
-
-    Integer getMember(String email);
-
     void createMember(MemberDAO memberDAO);
 }
