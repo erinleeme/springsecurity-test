@@ -66,35 +66,6 @@ public class JwtProvider {
         return accessToken;
     }
 
-    /*Refresh Token 발급*/
-    public String generateRefreshToken(Authentication authentication) {
-        /*사용자 권한 확인*/
-        String authorities = authentication.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.joining(", "));
-        long currentTime = (new Date()).getTime();
-
-        Claims claims = Jwts.claims()
-                .setSubject("refresh_token")
-                .setSubject(authentication.getName())
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(currentTime+(3 * 24 * 60 * 60 * 1000)));
-        claims.put("auth", authorities);
-
-        /*토큰 생성*/
-        String refreshToken = Jwts.builder()
-                .setHeaderParam("alg", "HS256")
-                .setHeaderParam("type", "JWT")
-                .setClaims(claims)
-                .signWith(SignatureAlgorithm.HS256, key)
-                .compact();
-
-        /*DB에 저장*/
-        memberMapper.addRefreshToken(authentication.getName(), refreshToken);
-
-        return refreshToken;
-    }
-
     /*토큰으로부터 사용자 정보 확인 함수*/
     public Authentication getAuthentication(String accessToken) {
         // 토큰 복호화

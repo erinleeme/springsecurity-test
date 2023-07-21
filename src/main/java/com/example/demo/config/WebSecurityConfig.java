@@ -83,7 +83,8 @@ public class WebSecurityConfig {
                  * */
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
-        /*먼저 사용자 인증 처리 후 token 인증 필터가 수행되도록 설정*/
+        /*먼저 사용자 인증 처리 전 JWTFilter 인증 필터가 수행되도록 설정*/
+        /*-> 메세지에 JWT가 있으면 사용자 인증작업이 필요없기 때문*/
         httpSecurity.addFilterAfter(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return httpSecurity.build();
