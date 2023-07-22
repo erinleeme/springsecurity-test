@@ -70,6 +70,15 @@ public class JwtProvider {
         return accessToken;
     }
 
+    /*request header로부터 토큰 정보 갖고 오는 함수*/
+    String resolveToken(HttpServletRequest request) {
+        String bearerToken = request.getHeader("Authorization"); /*Authorization: Bearer (JWT String값)*/
+        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
+            return bearerToken.substring(7);
+        }
+        return null;
+    }
+
     /*토큰으로부터 사용자 정보 확인 함수*/
     public Authentication getAuthentication(String accessToken) {
         Claims claims = Jwts.parser().setSigningKey(key).parseClaimsJws(accessToken).getBody();
@@ -88,14 +97,5 @@ public class JwtProvider {
         } catch (Exception e) {
             throw new JwtException(ErrorCode.INVALID_TOKEN);
         }
-    }
-
-    /*request header로부터 토큰 정보 갖고 오는 함수*/
-    String resolveToken(HttpServletRequest request) {
-        String bearerToken = request.getHeader("Authorization"); /*Authorization: Bearer (JWT String값)*/
-        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
-            return bearerToken.substring(7);
-        }
-        return null;
     }
 }
