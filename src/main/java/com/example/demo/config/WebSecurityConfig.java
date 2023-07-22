@@ -7,6 +7,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -31,6 +33,13 @@ public class WebSecurityConfig {
 
     @Autowired
     private JwtAuthenticationFilter jwtAuthenticationFilter;
+
+    @Bean
+    public AuthenticationManager authenticationManager(
+            AuthenticationConfiguration authenticationConfiguration
+    ) throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
+    }
 
     /*암호화에 사용될 Bcrypt 빈 생성*/
     @Bean
@@ -71,7 +80,6 @@ public class WebSecurityConfig {
                             }
                         })
                         .permitAll());;
-
 
         /*Session 비활성화*/
         httpSecurity.sessionManagement((session) -> session

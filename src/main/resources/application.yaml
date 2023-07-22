@@ -26,3 +26,4 @@ mybatis:
 jwt:
   header: Authorization
   secret: and0LXRlc3QtYWxqamFiYWVnaS1qd3QtdGVzdC1hbGpqYWJhZWdpLWp3dC10ZXN0LWFsamphYmFlZ2ktand0LXRlc3QtYWxqamFiYWVnaS1qd3QtdGVzdC1hbGpqYWJhZWdpLWp3dC10ZXN0LWFsamphYmFlZ2ktand0LXRlc3QtYWxqamFiYWVnaS1qd3QtdGVzdC1hbGpqYWJhZWdp
+  token-length: 86400

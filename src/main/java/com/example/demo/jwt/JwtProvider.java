@@ -1,6 +1,7 @@
 package com.example.demo.jwt;
 
-import com.example.demo.mapper.MemberMapper;
+import com.example.demo.exception.ErrorCode;
+import com.example.demo.exception.JwtException;
 import com.example.demo.service.MemberDetailsService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -12,7 +13,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.StringUtils;
 
@@ -21,14 +22,17 @@ import java.security.Key;
 import java.util.Date;
 import java.util.stream.Collectors;
 
-@Service
+@Component
 @RequiredArgsConstructor
 public class JwtProvider {
 
     @Value("${jwt.secret}") /*application.yaml에 설정해놓은 key*/
-    private final String key;
+    private String key;
+    @Value(("${jwt.token-length}"))
+    private long expireTime;
+
     private final MemberDetailsService memberDetailsService;
-    private final MemberMapper memberMapper;
+
 
     private Key getSecretKey(String key) {
         byte[] KeyBytes = key.getBytes(StandardCharsets.UTF_8);
@@ -49,7 +53,7 @@ public class JwtProvider {
                 .setSubject("access_token")
                 .setSubject(authentication.getName())
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(currentTime+(3 * 24 * 60 * 60 * 1000)));
+                .setExpiration(new Date(currentTime+expireTime));
         claims.put("auth", authorities);
 
         /*토큰 생성*/
@@ -68,13 +72,10 @@ public class JwtProvider {
 
     /*토큰으로부터 사용자 정보 확인 함수*/
     public Authentication getAuthentication(String accessToken) {
-        // 토큰 복호화
         Claims claims = Jwts.parser().setSigningKey(key).parseClaimsJws(accessToken).getBody();
-
         if (claims.get("auth") == null) {
             throw null;
         }
-
         UserDetails memberDetails = memberDetailsService.loadUserByUsername(claims.getSubject());
         return new UsernamePasswordAuthenticationToken(memberDetailsService, "", memberDetails.getAuthorities());
     }
@@ -85,11 +86,11 @@ public class JwtProvider {
             Jwts.parser().setSigningKey(key).parseClaimsJws(jwt);
             return true;
         } catch (Exception e) {
-            return false;
+            throw new JwtException(ErrorCode.INVALID_TOKEN);
         }
     }
 
-    /*request header 정보 갖고 오는 함수*/
+    /*request header로부터 토큰 정보 갖고 오는 함수*/
     String resolveToken(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization"); /*Authorization: Bearer (JWT String값)*/
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {

@@ -25,5 +25,12 @@ public class ErrorHandler {
         ErrorResponse response = new ErrorResponse(e.getErrorCode().getCode(), e.getErrorCode().getMessage());
         return response;
     }
+
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ExceptionHandler(JwtException.class)
+    public ErrorResponse jwtException(JwtException e) {
+        ErrorResponse response = new ErrorResponse(e.getErrorCode().getCode(), e.getErrorCode().getMessage());
+        return response;
+    }
 }
 
